@@ -2,7 +2,7 @@
 authors = ["Wiktor Jurkiewicz <watjurk@gmail.com>"]
 channels = ["conda-forge", "pytorch"]
 name = "project"
-platforms = ["osx-arm64"]
+platforms = ["win-64", "osx-arm64"]
 version = "0.1.0"
 
 [tasks]
@@ -15,6 +15,7 @@ pytorch = ">=2.7.0,<3"
 pandas = ">=2.2.3,<3"
 numpy = ">=2.2.6,<3"
 jupyter = ">=1.1.1,<2"
+ipykernel = ">=6.0.0,<7"
 
 [pypi-dependencies]
 hf-xet = ">=1.1.2, <2"
