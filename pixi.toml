@@ -1,0 +1,20 @@
+[workspace]
+authors = ["Wiktor Jurkiewicz <watjurk@gmail.com>"]
+channels = ["conda-forge", "pytorch"]
+name = "project"
+platforms = ["osx-arm64"]
+version = "0.1.0"
+
+[tasks]
+start = "python ./src/main.py"
+
+[dependencies]
+transformers = ">=4.52.4,<5"
+python = ">=3.13.3,<3.14"
+pytorch = ">=2.7.0,<3"
+pandas = ">=2.2.3,<3"
+numpy = ">=2.2.6,<3"
+jupyter = ">=1.1.1,<2"
+
+[pypi-dependencies]
+hf-xet = ">=1.1.2, <2"
