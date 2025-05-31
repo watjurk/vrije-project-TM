@@ -1,5 +1,5 @@
 [workspace]
-authors = ["Wiktor Jurkiewicz <watjurk@gmail.com>"]
+authors = ["Wiktor Jurkiewicz <watjurk@gmail.com>", "Augustas Paliulis"]
 channels = ["conda-forge", "pytorch"]
 name = "project"
 platforms = ["win-64", "osx-arm64"]
@@ -16,6 +16,10 @@ pandas = ">=2.2.3,<3"
 numpy = ">=2.2.6,<3"
 jupyter = ">=1.1.1,<2"
 ipykernel = ">=6.0.0,<7"
+scikit-learn = ">=1.2.0,<2"
+matplotlib = ">=3.7.0,<4"
+seaborn = ">=0.12.0,<0.14"
+xgboost = ">=2.0.0,<4"
 
 [pypi-dependencies]
 hf-xet = ">=1.1.2, <2"
