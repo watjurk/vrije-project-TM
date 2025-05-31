@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Dict, List, Tuple, Optional, Union
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
+import xgboost as xgb
 
 
 class BayesModel:
@@ -153,6 +155,177 @@ class BayesModel:
         }
 
 
+class XGBoostModel:
+    """XGBoost model for topic classification."""
+
+    def __init__(
+        self,
+        max_features: int = 5000,
+        n_estimators: int = 100,
+        learning_rate: float = 0.1,
+    ):
+        """
+        Initialize the XGBoost model.
+
+        Args:
+            max_features: Maximum number of features for TF-IDF vectorization
+            n_estimators: Number of boosting rounds
+            learning_rate: Learning rate for XGBoost
+        """
+        self.max_features = max_features
+        self.vectorizer = TfidfVectorizer(max_features=max_features)
+        self.le = LabelEncoder()
+        self.model = xgb.XGBClassifier(
+            n_estimators=n_estimators,
+            learning_rate=learning_rate,
+            use_label_encoder=False,
+            eval_metric="mlogloss",
+        )
+        self.classes_ = None
+
+    def fit(self, X_train: pd.Series, y_train: pd.Series) -> "XGBoostModel":
+        """
+        Train the model on the provided data.
+
+        Args:
+            X_train: Series containing text data
+            y_train: Series containing topic labels
+
+        Returns:
+            Self for method chaining
+        """
+        # Transform text to TF-IDF features
+        print("Transforming training text to TF-IDF features...")
+        X_train_tfidf = self.vectorizer.fit_transform(X_train)
+
+        # Encode labels
+        print("Encoding labels...")
+        self.le.fit(y_train)
+        y_train_encoded = self.le.transform(y_train)
+        self.classes_ = self.le.classes_
+
+        print(f"Classes found: {self.classes_}")
+
+        # Convert to dense for XGBoost
+        X_train_dense = X_train_tfidf.toarray()
+
+        # Train the model
+        print(f"Training XGBoost model with {self.max_features} features...")
+        self.model.fit(X_train_dense, y_train_encoded)
+
+        print("XGBoost model trained successfully.")
+        return self
+
+    def predict(self, X_test: pd.Series) -> np.ndarray:
+        """
+        Make predictions on test data.
+
+        Args:
+            X_test: Series containing text data
+
+        Returns:
+            Array of predicted topics
+        """
+        if self.vectorizer is None or self.model is None or self.le is None:
+            raise ValueError("Model not trained. Call fit() before predict().")
+
+        # Transform test data using the same vectorizer
+        X_test_tfidf = self.vectorizer.transform(X_test)
+
+        # Convert to dense for XGBoost
+        X_test_dense = X_test_tfidf.toarray()
+
+        # Make predictions (returns numeric predictions)
+        numeric_preds = self.model.predict(X_test_dense)
+
+        # Convert back to string labels
+        return self.le.inverse_transform(numeric_preds)
+
+    def evaluate(
+        self,
+        X_test: pd.Series,
+        y_test: pd.Series,
+        display_matrix: bool = True,
+        display_misclassified: bool = True,
+    ) -> Dict:
+        """
+        Evaluate the model performance.
+
+        Args:
+            X_test: Series containing text data
+            y_test: Series containing true topic labels
+            display_matrix: Whether to display the confusion matrix
+            display_misclassified: Whether to display misclassified examples
+
+        Returns:
+            Dictionary with evaluation metrics
+        """
+        # Make predictions
+        predictions = self.predict(X_test)
+
+        # Calculate accuracy
+        accuracy = accuracy_score(y_test, predictions)
+        print(f"Accuracy: {accuracy:.4f}")
+
+        # Generate classification report
+        report = classification_report(y_test, predictions, output_dict=True)
+        print("\nClassification Report:")
+        print(classification_report(y_test, predictions))
+
+        # Create confusion matrix
+        cm = confusion_matrix(y_test, predictions)
+
+        # Plot confusion matrix if requested
+        if display_matrix:
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(
+                cm,
+                annot=True,
+                fmt="d",
+                cmap="Blues",
+                xticklabels=self.classes_,
+                yticklabels=self.classes_,
+            )
+            plt.xlabel("Predicted Topic")
+            plt.ylabel("Actual Topic")
+            plt.title("Confusion Matrix for XGBoost Topic Classification")
+            plt.tight_layout()
+            plt.show()
+
+        # Create results DataFrame and show misclassified examples
+        results_df = pd.DataFrame(
+            {"text": X_test, "true_topic": y_test, "predicted_topic": predictions}
+        )
+
+        # Find misclassified examples
+        misclassified = results_df[
+            results_df["true_topic"] != results_df["predicted_topic"]
+        ]
+        misclassified_pct = len(misclassified) / len(results_df)
+        print(
+            f"\nMisclassified examples: {len(misclassified)}/{len(results_df)} ({misclassified_pct:.1%})"
+        )
+
+        # Display sample of misclassified examples
+        if display_misclassified and len(misclassified) > 0:
+            print("\nSample of misclassified examples:")
+            sample_size = min(5, len(misclassified))
+            print(
+                misclassified[["text", "true_topic", "predicted_topic"]].sample(
+                    sample_size
+                )
+            )
+
+        # Return evaluation metrics
+        return {
+            "accuracy": accuracy,
+            "report": report,
+            "confusion_matrix": cm,
+            "misclassified_count": len(misclassified),
+            "misclassified_percent": misclassified_pct,
+        }
+
+
 class TopicClassifier:
     """Main class for topic classification that can use different model implementations."""
 
@@ -170,10 +343,14 @@ class TopicClassifier:
         # Initialize the requested model
         if self.model_name == "bayes":
             self.model = BayesModel(**model_params)
+        elif self.model_name == "xgboost":
+            self.model = XGBoostModel(**model_params)
         else:
             raise ValueError(
-                f"Unknown model name: {model_name}. Supported models: 'bayes'"
+                f"Unknown model name: {model_name}. Supported models: 'bayes', 'xgboost'"
             )
+
+        print(f"Initialized {self.model_name} classifier")
 
     def train(
         self,
