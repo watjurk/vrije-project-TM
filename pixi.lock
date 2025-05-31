@@ -281,6 +281,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/webencodings-0.5.1-pyhd8ed1ab_3.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/websocket-client-1.8.0-pyhd8ed1ab_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/widgetsnbextension-4.0.14-pyhd8ed1ab_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/osx-arm64/wordcloud-1.9.4-py313h90d716c_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/xgboost-3.0.2-cpu_pyhc1a9e11_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/xorg-libxau-1.0.12-h5505292_0.conda
       - conda: https://conda.anaconda.org/conda-forge/osx-arm64/xorg-libxdmcp-1.1.5-hd74edd7_0.conda
@@ -575,6 +576,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/noarch/widgetsnbextension-4.0.14-pyhd8ed1ab_0.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/win_inet_pton-1.1.0-pyh7428d3b_8.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/winpty-0.4.3-4.tar.bz2
+      - conda: https://conda.anaconda.org/conda-forge/win-64/wordcloud-1.9.4-py313ha7868ed_1.conda
       - conda: https://conda.anaconda.org/conda-forge/noarch/xgboost-3.0.2-cpu_pyhc1a9e11_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/xorg-libxau-1.0.12-h0e40799_0.conda
       - conda: https://conda.anaconda.org/conda-forge/win-64/xorg-libxdmcp-1.1.5-h0e40799_0.conda
@@ -6787,6 +6789,41 @@ packages:
   license_family: MIT
   purls: []
   size: 1176306
+- conda: https://conda.anaconda.org/conda-forge/osx-arm64/wordcloud-1.9.4-py313h90d716c_1.conda
+  sha256: 3d283ec962e407896311024532b8c5a19a7670988c9c9e072cfc35d666e6a1f1
+  md5: 9d4e5c3819df399db771902f79754007
+  depends:
+  - __osx >=11.0
+  - matplotlib-base
+  - numpy >=1.6.1
+  - pillow
+  - python >=3.13,<3.14.0a0
+  - python >=3.13,<3.14.0a0 *_cp313
+  - python_abi 3.13.* *_cp313
+  license: MIT
+  license_family: MIT
+  purls:
+  - pkg:pypi/wordcloud?source=hash-mapping
+  size: 179672
+  timestamp: 1733149031901
+- conda: https://conda.anaconda.org/conda-forge/win-64/wordcloud-1.9.4-py313ha7868ed_1.conda
+  sha256: 13b9890715d397d8fba31fc648461e7bd9c738f8af54d159547b8e3c21b90769
+  md5: 27e9d93b9e60f95af8a2974ee29bf0e5
+  depends:
+  - matplotlib-base
+  - numpy >=1.6.1
+  - pillow
+  - python >=3.13,<3.14.0a0
+  - python_abi 3.13.* *_cp313
+  - ucrt >=10.0.20348.0
+  - vc >=14.2,<15
+  - vc14_runtime >=14.29.30139
+  license: MIT
+  license_family: MIT
+  purls:
+  - pkg:pypi/wordcloud?source=hash-mapping
+  size: 305233
+  timestamp: 1733149344751
 - conda: https://conda.anaconda.org/conda-forge/noarch/xgboost-3.0.2-cpu_pyhc1a9e11_0.conda
   sha256: 6ba3df3f43eaae3d418d12e311422ab31fabe5a33fc407a3297f79601d191c5f
   md5: 62bb708cce91fa4fafeb0aa256c8fdb0
