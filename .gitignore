@@ -2,3 +2,6 @@
 # pixi environments
 .pixi
 *.egg-info
+
+# Ignoring topic data folder as the files are to large
+/data/topic
