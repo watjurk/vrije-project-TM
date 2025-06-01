@@ -2,18 +2,18 @@ text,true_label,predicted_label,is_correct
 The stadium was alive with the roar of the crowd after that incredible win.,sports,sports,True
 That last-minute goal had me jumping out of my seat—what an unbelievable finish!,sports,sports,True
 I couldn’t put the book down; it swept me into a whole new world.,book,book,True
-"The story had its moments, though some parts felt like they dragged on a bit.",book,movie,False
+"The story had its moments, though some parts felt like they dragged on a bit.",book,book,True
 "I enjoyed the way the timelines shifted, even if it got a little confusing sometimes.",book,sports,False
 "Every time I watch this movie, I notice something new—it really grows on you.",movie,movie,True
 The movie was a wild ride from start to finish; I was on the edge of my seat the entire time.,movie,sports,False
 "Honestly, the team just fell apart in the second half, and it showed on the field.",sports,sports,True
 No surprise there—the coach rested a few players given how packed the schedule was.,sports,sports,True
 "The trailer was decent, giving you a taste without spilling all the secrets.",movie,sports,False
-I found the main character so annoying that it was hard to care about what happened next.,book,movie,False
+I found the main character so annoying that it was hard to care about what happened next.,book,book,True
 "The author's style feels really genuine, making each sentence resonate.",book,book,True
 The movie never really clicked for me; the leads just lacked any real spark.,movie,movie,True
 "Both teams are playing it safe right now, so it's hard to tell who’ll eventually take the lead.",sports,sports,True
 "Frankly, I don’t get the hype—it’s just a game after all.",sports,sports,True
 "Word is, the screenplay was scribbled down during a casual coffee break at a busy cafe.",movie,sports,False
-It’s surprising how a promising start could unravel into such a disappointing finish.,movie,sports,False
+It’s surprising how a promising start could unravel into such a disappointing finish.,movie,book,False
 "In the end, the book was more useful as a coaster than as something worth reading.",book,book,True

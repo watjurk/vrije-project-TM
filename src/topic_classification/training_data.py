@@ -291,3 +291,82 @@ class TrainingDataConstructor:
         plt.show()
 
         return stats
+
+    def tokenize_text(
+        self, data: pd.DataFrame, text_column: str = "review_text"
+    ) -> pd.DataFrame:
+        """
+        Tokenize text data in preparation for TF-IDF vectorization.
+
+        Args:
+            data: DataFrame containing text data
+            text_column: Name of the column containing text to tokenize
+
+        Returns:
+            DataFrame with additional 'tokens' column containing tokenized text
+        """
+        import nltk
+        from nltk.tokenize import word_tokenize
+        from nltk.corpus import stopwords
+        from nltk.stem import WordNetLemmatizer
+
+        # Download necessary NLTK resources if not already available
+        try:
+            nltk.data.find("tokenizers/punkt")
+        except LookupError:
+            nltk.download("punkt")
+
+        try:
+            nltk.data.find("corpora/stopwords")
+        except LookupError:
+            nltk.download("stopwords")
+
+        try:
+            nltk.data.find("corpora/wordnet")
+        except LookupError:
+            nltk.download("wordnet")
+
+        print("Tokenizing text data...")
+
+        # Initialize lemmatizer and stopwords
+        lemmatizer = WordNetLemmatizer()
+        stop_words = set(stopwords.words("english"))
+
+        def process_text(text):
+            if not isinstance(text, str):
+                return []
+
+            # Convert to lowercase
+            text = text.lower()
+
+            # Tokenize
+            tokens = word_tokenize(text)
+
+            # Remove stopwords and punctuation, lemmatize
+            tokens = [
+                lemmatizer.lemmatize(token)
+                for token in tokens
+                if token.isalpha() and token not in stop_words
+            ]
+
+            return tokens
+
+        # Apply tokenization to the text column
+        data["tokens"] = data[text_column].apply(process_text)
+
+        # Print sample of tokenized text
+        if len(data) > 0:
+            print("\nSample tokenization:")
+            sample_idx = min(5, len(data) - 1)
+            sample_text = data[text_column].iloc[sample_idx]
+            if len(sample_text) > 100:
+                sample_text = sample_text[:100] + "..."
+            sample_tokens = data["tokens"].iloc[sample_idx][:10]
+            print(f"Original: {sample_text}")
+            print(f"Tokenized: {sample_tokens}")
+            if len(data["tokens"].iloc[sample_idx]) > 10:
+                print("...")
+
+        print(f"Tokenization complete. Added 'tokens' column to DataFrame.")
+
+        return data
