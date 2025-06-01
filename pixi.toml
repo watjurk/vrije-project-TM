@@ -10,10 +10,8 @@ start = "python ./src/main.py"
 
 [dependencies]
 transformers = ">=4.52.4,<5"
-python = ">=3.13.3,<3.14"
 pytorch = ">=2.7.0,<3"
 pandas = ">=2.2.3,<3"
-numpy = ">=2.2.6,<3"
 jupyter = ">=1.1.1,<2"
 ipykernel = ">=6.0.0,<7"
 scikit-learn = ">=1.2.0,<2"
@@ -22,6 +20,9 @@ seaborn = ">=0.12.0,<0.14"
 xgboost = ">=2.0.0,<4"
 pip = ">=25.1.1,<26"
 nltk = ">=3.9.1,<4"
+spacy = ">=3.8.6,<4"
+python = ">=3.12.10,<3.13"
+numpy = ">=2.2.6,<3"
 
 [pypi-dependencies]
 hf-xet = ">=1.1.2, <2"
