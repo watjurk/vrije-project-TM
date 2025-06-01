@@ -217,3 +217,77 @@ class TrainingDataConstructor:
             print("Dataset saved successfully")
 
         return combined_df
+
+    def get_dataset_statistics(self, data: pd.DataFrame) -> Dict:
+        """
+        Generate basic statistics about the dataset for presentation.
+
+        Args:
+            data: Combined dataset with 'review_text' and 'topic' columns
+
+        Returns:
+            Dictionary containing key statistics about the dataset
+        """
+        import matplotlib.pyplot as plt
+        import seaborn as sns
+
+        print("Generating basic dataset statistics...")
+
+        # Initialize statistics dictionary
+        stats = {}
+
+        # 1. Overall dataset size
+        stats["total_samples"] = len(data)
+
+        # 2. Class distribution
+        class_counts = data["topic"].value_counts()
+        stats["class_distribution"] = class_counts.to_dict()
+
+        # 3. Calculate text length statistics
+        data["text_length"] = data["review_text"].apply(len)
+        data["word_count"] = data["review_text"].apply(lambda x: len(str(x).split()))
+
+        # 4. Text statistics by topic
+        topic_stats = {}
+        for topic in data["topic"].unique():
+            topic_data = data[data["topic"] == topic]
+            topic_stats[topic] = {
+                "count": len(topic_data),
+                "avg_text_length": round(topic_data["text_length"].mean(), 1),
+                "avg_word_count": round(topic_data["word_count"].mean(), 1),
+                "median_text_length": int(topic_data["text_length"].median()),
+                "median_word_count": int(topic_data["word_count"].median()),
+            }
+        stats["topic_stats"] = topic_stats
+
+        # 5. Print summary for quick reference
+        print("\nDataset Statistics Summary:")
+        print(f"Total samples: {stats['total_samples']}")
+
+        print("\nClass distribution:")
+        for topic, count in class_counts.items():
+            print(f"  {topic}: {count} samples ({count/len(data):.1%})")
+
+        print("\nText length by topic:")
+        for topic, topic_stat in topic_stats.items():
+            print(
+                f"  {topic}: {topic_stat['avg_word_count']} words (avg), {topic_stat['median_word_count']} words (median)"
+            )
+
+        # 6. Create a basic visualization
+        plt.figure(figsize=(10, 6))
+
+        # Plot average word counts by topic
+        topic_names = list(topic_stats.keys())
+        avg_words = [
+            stats["topic_stats"][topic]["avg_word_count"] for topic in topic_names
+        ]
+
+        sns.barplot(x=topic_names, y=avg_words)
+        plt.title("Average Text Length by Topic")
+        plt.xlabel("Topic")
+        plt.ylabel("Average Word Count")
+        plt.tight_layout()
+        plt.show()
+
+        return stats
