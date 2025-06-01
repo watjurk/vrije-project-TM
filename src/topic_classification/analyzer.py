@@ -103,6 +103,9 @@ class ErrorAnalyzer:
             f"Misclassified examples: {len(misclassified_df)}/{len(self.results_df)} ({misclassified_pct:.1%})"
         )
 
+        print("Classificaton repot")
+        print(classification_report(true_labels, predicted_labels))
+
         return self.error_analysis
 
     def plot_confusion_matrix(
